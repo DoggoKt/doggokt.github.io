@@ -23,7 +23,7 @@
     padding-bottom: 2px
 }
 
-@media only screen and (max-width: 740px) {
+@media only screen and (max-width: 890px) {
     #contact-column .col {
         flex: 100%;
     }
