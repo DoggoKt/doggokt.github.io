@@ -13,7 +13,7 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
          </div>`;
 
 let localMatchesCache = [];
-async function loadMatches(unclean = false, maxLength = 0, insertBefore = false) {
+async function loadMatches(unclean = false, filter = null, insertBefore = false) {
     let data;
     if (unclean && Object.keys(localMatchesCache.length) > 0) {
         data = localMatchesCache;
@@ -25,8 +25,8 @@ async function loadMatches(unclean = false, maxLength = 0, insertBefore = false)
         }
     }
 
-    if (maxLength){
-        data = data.slice(0, maxLength)
+    if (filter){
+        data = data.filter(filter);
     }
 
     const elements = data.map(l => {
@@ -68,6 +68,7 @@ async function loadMatches(unclean = false, maxLength = 0, insertBefore = false)
         }
     }
 
+    if (filter) return data;
 }
 
 function formatImageURL(teamName){
