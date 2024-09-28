@@ -1,4 +1,4 @@
-const FIREBASE_BASEURL = "http://127.0.0.1:5001/pristine-sphere-435312-g4/europe-west4/"
+const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
 const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="{STYLE}">
             <!--{FIRST}-->
             <!--{DATE}-->
