@@ -6,6 +6,11 @@
     row-gap: 20px
 }
 
+#gallery_container h2 {
+    width: 100%;
+    margin-top:50px;
+}
+
 @media only screen and (min-width: 880px) {
     #gallery_container a {
         flex: 0 0 30%;
