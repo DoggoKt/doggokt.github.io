@@ -14,61 +14,62 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
 
 let localMatchesCache = [];
 async function loadMatches(unclean = false, filter = null, insertBefore = false) {
-    let data;
-    if (unclean && Object.keys(localMatchesCache.length) > 0) {
-        data = localMatchesCache;
-    } else {
-        data = await fetch(FIREBASE_BASEURL + "getMatches").then(r => r.json());
-        localMatchesCache = data; // before filter
-        if (!unclean){
-            data = data.filter(l => !!l.date && !!l.time);
-        }
-    }
-
-    if (filter){
-        data = data.filter(filter);
-    }
-
-    const elements = data.map(l => {
-        const date = l.date || "BEZ DANÉHO DATA";
-        const time = l.time || "BEZ DANÉHO ČASU";
-
-        return MATCH_TEMPLATE
-            .replaceAll("{STYLE}", `padding: 30px var(--wp--preset--spacing--50) 50px;`)
-            .replaceAll("{LEFT_URL}", `/images/${formatImageURL(l.team_left)}.png`)
-            .replaceAll("{LEFT_NAME}", l.team_left)
-            .replaceAll("{RIGHT_URL}", `/images/${formatImageURL(l.team_right)}.png`)
-            .replaceAll("{RIGHT_NAME}", l.team_right)
-            .replaceAll("{SCORE}", l.score.split(":").join(" : "))
-            .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
-            .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
-            .replaceAll("{ID}", l.id)
-
-    });
-
-    const container = document.getElementById("matches-container");
-
-    if (elements.length === 0) {
-        container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
-
-        if (!unclean) {
-            container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
-        }
-    } else {
-        elements[0] = elements[0]
-            .replaceAll("<!--{FIRST}-->", unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
-            .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
-
-        if (insertBefore){
-            elements[elements.length-1] = elements[elements.length-1]
-                .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
-            container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
+    return new Promise(async (resolve, reject) => {
+        let data;
+        if (unclean && Object.keys(localMatchesCache.length) > 0) {
+            data = localMatchesCache;
         } else {
-            container.innerHTML = elements.join("<br/><br/>");
+            data = await fetch(FIREBASE_BASEURL + "getMatches").then(r => r.json());
+            localMatchesCache = data; // before filter
+            if (!unclean) {
+                data = data.filter(l => !!l.date && !!l.time);
+            }
         }
-    }
 
-    if (filter) return data;
+        if (filter) {
+            data = data.filter(filter);
+        }
+
+        const elements = data.map(l => {
+            const date = l.date || "BEZ DANÉHO DATA";
+            const time = l.time || "BEZ DANÉHO ČASU";
+
+            return MATCH_TEMPLATE
+                .replaceAll("{STYLE}", `padding: 30px var(--wp--preset--spacing--50) 50px;`)
+                .replaceAll("{LEFT_URL}", `/images/${formatImageURL(l.team_left)}.png`)
+                .replaceAll("{LEFT_NAME}", l.team_left)
+                .replaceAll("{RIGHT_URL}", `/images/${formatImageURL(l.team_right)}.png`)
+                .replaceAll("{RIGHT_NAME}", l.team_right)
+                .replaceAll("{SCORE}", l.score.split(":").join(" : "))
+                .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
+                .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
+                .replaceAll("{ID}", l.id)
+
+        });
+
+        const container = document.getElementById("matches-container");
+
+        if (elements.length === 0) {
+            container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
+
+            if (!unclean) {
+                container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
+            }
+        } else {
+            elements[0] = elements[0]
+                .replaceAll("<!--{FIRST}-->", unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
+                .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
+
+            if (insertBefore) {
+                elements[elements.length - 1] = elements[elements.length - 1]
+                    .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
+                container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
+            } else {
+                container.innerHTML = elements.join("<br/><br/>");
+            }
+        }
+        resolve(data.length ? data[0] : null)
+    })
 }
 
 function formatImageURL(teamName){
