@@ -535,6 +535,13 @@ html.has-modal-open {
     font-size: 20px;
 }
 
+@media only screen and (max-width: 420px){
+    #countdown li {
+        padding: 0 8px;
+        font-size: 17px;
+    }
+}
+
 #countdown .finished{
     color: #fff;
     font-weight: normal;
