@@ -89,7 +89,7 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("{LEFT_NAME}", l.team_left)
                 .replaceAll("{RIGHT_URL}", `/images/${formatImageURL(l.team_right)}.png`)
                 .replaceAll("{RIGHT_NAME}", l.team_right)
-                .replaceAll("{SCORE}", l.score ? l.score.split(":").join(" : ") : "- : -")
+                .replaceAll("{SCORE}", l.score || "- : -")
                 .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{ID}", l.id)
