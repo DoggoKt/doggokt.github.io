@@ -4,11 +4,15 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
             <!--{DATE}-->
             <!--{TIME}-->
             <div class="match-div" style="display: flex; align-items: center;">
-                <img style="flex-grow:1;flex-basis:0;width: 0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
-                <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
-                <h1 style="color: #fff;">{SCORE}</h1>
-                <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
-                <img style="flex-grow:1;flex-basis:0;width: 0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
+                <div class="team-wrapper team-left">
+                    <img style="flex-grow:1;flex-basis:0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
+                    <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
+                </div>
+                <h1 style="color: #fff;text-wrap:nowrap;">{SCORE}</h1>
+                <div class="team-wrapper team-right">
+                    <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
+                    <img style="flex-grow:1;flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
+                </div>
             </div>
          </div>`;
 
@@ -17,7 +21,14 @@ const STYLE = `
 .match-div {
     gap: 50px;
 }
+ 
+.match-div .team-wrapper {
+    display:contents;
+}
 
+.match-div img {
+width:0;
+}
 @media only screen and (max-width: 910px) {
     .match-div {
         gap: 0;
@@ -49,8 +60,21 @@ const STYLE = `
 
 
 @media only screen and (max-width:450px){
+    .match-div .team-wrapper {
+        display: flex;
+        margin: 10px;
+    }
+    
+    .match-div .team-wrapper.team-left {
+            flex-direction: column;
+    }
+    
+    .match-div .team-wrapper.team-right {
+            flex-direction: column-reverse;
+    }
+    
     .match-div img {
-        display: none;
+        width:100%;
     }
 }
 </style>
