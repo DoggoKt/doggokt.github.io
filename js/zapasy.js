@@ -28,6 +28,7 @@ const STYLE = `
 
 .match-div img {
 width:0;
+margin:10px;
 }
 @media only screen and (max-width: 910px) {
     .match-div {
@@ -59,7 +60,7 @@ width:0;
 }
 
 
-@media only screen and (max-width:450px){
+@media only screen and (max-width:570px){
     .match-div .team-wrapper {
         display: flex;
         margin: 10px;
@@ -75,6 +76,7 @@ width:0;
     
     .match-div img {
         width:100%;
+        margin:0;
     }
 }
 </style>
