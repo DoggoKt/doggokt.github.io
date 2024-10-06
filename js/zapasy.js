@@ -13,7 +13,7 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
          </div>`;
 
 let localMatchesCache = [];
-async function loadMatches(unclean = false, filter = null, insertBefore = false) {
+async function loadMatches(unclean = false, filter = null, insertBefore = false, maxLength = null) {
     return new Promise(async (resolve, reject) => {
         let data;
         if (unclean && Object.keys(localMatchesCache.length) > 0) {
@@ -30,6 +30,10 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false)
             data = data.filter(filter);
         }
 
+        if(maxLength){
+            data = data.slice(0, maxLength)
+        }
+
         const elements = data.map(l => {
             const date = l.date || "BEZ DANÉHO DATA";
             const time = l.time || "BEZ DANÉHO ČASU";
@@ -40,7 +44,7 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false)
                 .replaceAll("{LEFT_NAME}", l.team_left)
                 .replaceAll("{RIGHT_URL}", `/images/${formatImageURL(l.team_right)}.png`)
                 .replaceAll("{RIGHT_NAME}", l.team_right)
-                .replaceAll("{SCORE}", l.score.split(":").join(" : "))
+                .replaceAll("{SCORE}", l.score ? l.score.split(":").join(" : ") : "- : -")
                 .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{ID}", l.id)

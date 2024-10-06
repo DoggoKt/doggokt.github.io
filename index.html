@@ -97,7 +97,7 @@
 </div>
 <script type="application/javascript" src="./js/zapasy.js"></script>
 <script type="application/javascript" defer>
-	loadMatches(false, (m) => makeDate(m.date, m.time).getTime() > Date.now(), true)
+	loadMatches(false, (m) => makeDate(m.date, m.time).getTime() > Date.now(), true, 1)
 			.then((match) => registerCountdown(makeDate(match.date, match.time)))
 </script>
 <script type="application/javascript" src="./js/countdown.js"></script>
