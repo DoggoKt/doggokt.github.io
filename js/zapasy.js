@@ -5,13 +5,13 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
             <!--{TIME}-->
             <div class="match-div" style="display: flex; align-items: center;">
                 <div class="team-wrapper team-left">
-                    <img style="flex-grow:1;flex-basis:0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
+                    <img style="flex-basis:0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
                     <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
                 </div>
                 <h1 style="color: #fff;white-space:pre;">{SCORE}</h1>
                 <div class="team-wrapper team-right">
-                    <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
-                    <img style="flex-grow:1;flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
+                    <h3 style="flex-grow: 1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
+                    <img style="flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
                 </div>
             </div>
          </div>`;
@@ -29,6 +29,7 @@ const STYLE = `
 .match-div img {
 width:0;
 margin:10px;
+flex-grow: 1.5;
 }
 @media only screen and (max-width: 910px) {
     .match-div {
@@ -46,6 +47,9 @@ margin:10px;
     }
     .match-div h1 {
     font-size: 37px;
+    }
+    .match-div img {
+    flex-grow: 1;
     }
 }
 
