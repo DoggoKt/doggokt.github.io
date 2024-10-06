@@ -17,22 +17,41 @@ const STYLE = `
 .match-div {
     gap: 50px;
 }
-@media only screen and (max-width: 840px) {
+
+@media only screen and (max-width: 910px) {
     .match-div {
-        gap: 20px
+        gap: 0;
+    }
+    
+    .match-div h1 {
+        margin: 20px; 
     }
 }    
 
-@media only screen and (max-width: 500px){
-    .match-div img {
-    display: none;
+@media only screen and (max-width: 790px){
+    .match-div h3 {
+        font-size: 20px;
+    }
+    .match-div h1 {
+    font-size: 37px;
     }
 }
 
-@media only screen and (max-width: 400px){
-.match-div h3 {
-font-size: 15px;
+@media only screen and (max-width: 630px){
+    
+    .match-div h3 {
+        font-size: 15px;
+    }
+    .match-div h1 {
+    font-size: 25px;
+    }
 }
+
+
+@media only screen and (max-width:450px){
+    .match-div img {
+        display: none;
+    }
 }
 </style>
 
@@ -40,7 +59,7 @@ font-size: 15px;
 
 let localMatchesCache = [];
 async function loadMatches(unclean = false, filter = null, insertBefore = false, maxLength = null) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, _) => {
         let data;
         if (unclean && Object.keys(localMatchesCache.length) > 0) {
             data = localMatchesCache;
