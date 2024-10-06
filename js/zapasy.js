@@ -3,7 +3,7 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
             <!--{FIRST}-->
             <!--{DATE}-->
             <!--{TIME}-->
-            <div style="display: flex;gap: 50px; align-items: center;">
+            <div class="match-div" style="display: flex; align-items: center;">
                 <img style="flex-grow:1;flex-basis:0;width: 0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
                 <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
                 <h1 style="color: #fff;">{SCORE}</h1>
@@ -11,6 +11,32 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
                 <img style="flex-grow:1;flex-basis:0;width: 0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
             </div>
          </div>`;
+
+const STYLE = `
+<style>
+.match-div {
+    gap: 50px;
+}
+@media only screen and (max-width: 840px) {
+    .match-div {
+        gap: 20px
+    }
+}    
+
+@media only screen and (max-width: 500px){
+    .match-div img {
+    display: none;
+    }
+}
+
+@media only screen and (max-width: 400px){
+.match-div h3 {
+font-size: 15px;
+}
+}
+</style>
+
+`
 
 let localMatchesCache = [];
 async function loadMatches(unclean = false, filter = null, insertBefore = false, maxLength = null) {
@@ -61,7 +87,7 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
             }
         } else {
             elements[0] = elements[0]
-                .replaceAll("<!--{FIRST}-->", unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
+                .replaceAll("<!--{FIRST}-->", unclean ? "" : STYLE + "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
                 .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
 
             if (insertBefore) {
