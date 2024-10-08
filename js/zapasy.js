@@ -15,7 +15,7 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
                     <img style="flex-basis:0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
                     <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
                 </div>
-                <h1 style="color: #fff;white-space:pre;">{SCORE}</h1>
+                {SCORE}
                 <div class="team-wrapper team-right">
                     <h3 style="flex-grow: 1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
                     <img style="flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
@@ -120,21 +120,22 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
             const date = l.date || "BEZ DANÉHO DATA";
             const time = l.time || "BEZ DANÉHO ČASU";
 
+            console.log(l)
+
             let returnValue = MATCH_TEMPLATE
                 .replaceAll("{STYLE}", `padding: 30px var(--wp--preset--spacing--50) 50px;`)
                 .replaceAll("{LEFT_URL}", `/images/${formatImageURL(l.team_left)}.png`)
                 .replaceAll("{LEFT_NAME}", l.team_left)
                 .replaceAll("{RIGHT_URL}", `/images/${formatImageURL(l.team_right)}.png`)
                 .replaceAll("{RIGHT_NAME}", l.team_right)
-                .replaceAll("{SCORE}", l.score || "- : -")
+                .replaceAll("{SCORE}", `<h1 ${unclean ? "class='settable-score'" : ""} style="color: #fff;white-space:pre;">${l.score || "- : -"}</h1>`)
                 .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{ID}", l.id)
 
             if (makeDate(l.date, l.time).getTime() > Date.now()) {
-                console.log(data.indexOf(l))
                 returnValue = returnValue
-                    .replaceAll("<!--{FIRST}-->", unclean ? "" : STYLE + "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
+                    .replaceAll("<!--{FIRST}-->", STYLE + (unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
                     .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
             }
 

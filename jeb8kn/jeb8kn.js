@@ -1,10 +1,21 @@
 const pass = prompt("Heslo")
 if (pass==="") throw Error();
-function onClick(e, isDate){
-    const value = prompt(isDate ? "Nové datum ve formátu DD.MM.YYYY (např. 28.9.2024)" : "Nový čas ve 24-hodinovém formátu (např: 14:25)")
+
+const prompts = {
+    "date": "Nové datum ve formátu DD.MM.YYYY (např. 28.9.2024)",
+    "time": "Nový čas ve 24-hodinovém formátu (např: 14:25)",
+    "score": "Nové skóre rozdělené dvojtečkou (např: 8:2)"
+}
+const sucessTexts = {
+    "date": "Nové datum: {0}",
+    "time": "Nový čas: {0}",
+    "score": "{0}"
+}
+function onClick(e, dataType){
+    const value = prompt(prompts[dataType])
     if(!value) return;
-    const obj = { id: e.target.parentNode.dataset.matchid };
-    obj[isDate ? "date" : "time"] = value;
+    const obj = { id: dataType === "score" ? e.target.parentNode.parentNode.dataset.matchid : e.target.parentNode.dataset.matchid };
+    obj[dataType] = value;
 
     e.target.style.color = "#ffffff";
     e.target.innerText = "Načítání..."
@@ -14,7 +25,7 @@ function onClick(e, isDate){
                 case 204:
                 case 200:
                     e.target.style.color = "#166e00";
-                    e.target.innerText = isDate ? "Nové datum: "+value : "Nový čas: "+value;
+                    e.target.innerText = sucessTexts[dataType].replace("{0}", value);
                     return;
                 case 401:
                     e.target.style.color = "#920000"
@@ -37,14 +48,16 @@ function onClick(e, isDate){
 loadMatches(true).then(() => {
     const dateEl = document.getElementsByClassName("settable-date");
     const timeEl = document.getElementsByClassName("settable-time");
-    for (const el of [...dateEl, ...timeEl]) {
+    const scoreEl = document.getElementsByClassName("settable-score")
+    for (const el of [...dateEl, ...timeEl, ...scoreEl]) {
         el.addEventListener("mouseover", (e) => {
             if (e.target.innerText.startsWith("BEZ DANÉHO")) {
                 e.target.innerText = "NASTAVIT";
             }
             e.target.style.outline = "2px solid white"
             e.target.style.cursor = "pointer"
-            e.target.onclick = (e)=>onClick(e, el.classList.contains("settable-date"), {once:true})
+
+            e.target.onclick = (e)=>onClick(e, el.className.split(" ").find(cl => cl.startsWith("settable")).split("-")[1], {once:true})
         })
 
         if (el.classList.contains("settable-date")){
@@ -56,10 +69,19 @@ loadMatches(true).then(() => {
                 e.target.style.cursor = "auto"
                 e.target.onclick = null;
             })
-        } else {
+        } else if (el.classList.contains("settable-time")) {
             el.addEventListener("mouseout", (e) => {
                 if (e.target.innerText === "NASTAVIT") {
                     e.target.innerText = "BEZ DANÉHO ČASU";
+                }
+                e.target.style.outline = "none"
+                e.target.style.cursor = "auto"
+                e.target.onclick = null
+            })
+        } else {
+            el.addEventListener("mouseout", (e) => {
+                if (e.target.innerText === "NASTAVIT"){
+                    e.target.innerText = "- : -";
                 }
                 e.target.style.outline = "none"
                 e.target.style.cursor = "auto"
