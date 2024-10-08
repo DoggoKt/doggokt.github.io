@@ -1,3 +1,10 @@
+function makeDate(date, time){
+    const splitted = date.split(".")
+    if (splitted.length !== 3 || time.split(":").length !== 2) return 0;
+    const [hours, mins] = time.split(":")
+    return new Date(Date.parse(`${splitted[2]}-${splitted[1].padStart(2, "0")}-${splitted[0].padStart(2, "0")}T${hours.padStart(2, "0")}:${mins.padStart(2, "0")}`));
+}
+
 const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
 const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="{STYLE}">
             <!--{FIRST}-->
@@ -113,7 +120,7 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
             const date = l.date || "BEZ DANÉHO DATA";
             const time = l.time || "BEZ DANÉHO ČASU";
 
-            return MATCH_TEMPLATE
+            let returnValue = MATCH_TEMPLATE
                 .replaceAll("{STYLE}", `padding: 30px var(--wp--preset--spacing--50) 50px;`)
                 .replaceAll("{LEFT_URL}", `/images/${formatImageURL(l.team_left)}.png`)
                 .replaceAll("{LEFT_NAME}", l.team_left)
@@ -124,31 +131,35 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{ID}", l.id)
 
-        });
-
-        const container = document.getElementById("matches-container");
-
-        if (elements.length === 0) {
-            container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
-
-            if (!unclean) {
-                container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
+            if (makeDate(l.date, l.time).getTime() > Date.now()) {
+                console.log(data.indexOf(l))
+                returnValue = returnValue
+                    .replaceAll("<!--{FIRST}-->", unclean ? "" : STYLE + "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
+                    .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
             }
-        } else {
-            elements[0] = elements[0]
-                .replaceAll("<!--{FIRST}-->", unclean ? "" : STYLE + "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>")
-                .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
 
-            if (insertBefore) {
-                elements[elements.length - 1] = elements[elements.length - 1]
-                    .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
-                container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
-            } else {
-                container.innerHTML = elements.join("<br/><br/>");
-            }
+            return returnValue;
+    });
+
+    const container = document.getElementById("matches-container");
+
+    if (elements.length === 0) {
+        container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
+
+        if (!unclean) {
+            container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
         }
-        resolve(data.length ? data[0] : null)
-    })
+    } else {
+        if (insertBefore) {
+            elements[elements.length - 1] = elements[elements.length - 1]
+                .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
+            container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
+        } else {
+            container.innerHTML = elements.join("<br/><br/>");
+        }
+    }
+    resolve(data.length ? data[0] : null)
+})
 }
 
 function formatImageURL(teamName){
