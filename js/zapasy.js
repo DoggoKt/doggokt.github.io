@@ -116,11 +116,10 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
             data = data.slice(0, maxLength)
         }
 
+        let foundFirst = false;
         const elements = data.map(l => {
             const date = l.date || "BEZ DANÉHO DATA";
             const time = l.time || "BEZ DANÉHO ČASU";
-
-            console.log(l)
 
             let returnValue = MATCH_TEMPLATE
                 .replaceAll("{STYLE}", `padding: 30px var(--wp--preset--spacing--50) 50px;`)
@@ -133,10 +132,11 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{ID}", l.id)
 
-            if (makeDate(l.date, l.time).getTime() > Date.now()) {
+            if (!foundFirst && makeDate(l.date, l.time).getTime() > Date.now()) {
                 returnValue = returnValue
                     .replaceAll("<!--{FIRST}-->", STYLE + (unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
                     .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
+                foundFirst = true;
             }
 
             return returnValue;
