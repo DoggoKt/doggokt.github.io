@@ -29,7 +29,9 @@ function registerCountdown(date){
             const daysVal = Math.floor(distance / (24 * 60 * 60 * 1000));
             if (daysVal === 1) {
                 daysWord.innerText = "den";
-            } else {
+            } else if (daysVal > 1 && daysVal < 5){
+                daysWord.innerText = "dny";
+            } else if (daysVal >= 5) {
                 daysWord.innerText = "dní";
             }
             days.innerHTML = daysVal.toString() + daysWord.outerHTML;
