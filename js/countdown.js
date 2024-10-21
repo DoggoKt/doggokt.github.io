@@ -31,7 +31,7 @@ function registerCountdown(date){
                 daysWord.innerText = "den";
             } else if (daysVal > 1 && daysVal < 5){
                 daysWord.innerText = "dny";
-            } else if (daysVal >= 5) {
+            } else if (daysVal >= 5 || daysVal === 0) {
                 daysWord.innerText = "dní";
             }
             days.innerHTML = daysVal.toString() + daysWord.outerHTML;
