@@ -85,6 +85,12 @@ flex-grow: 1.5;
             flex-direction: column-reverse;
     }
     
+    .match-div .team-wrapper {
+        flex-basis: 0;
+        flex-grow: 1;
+    }
+    
+    
     .match-div img {
         width:100%;
         margin:0;
