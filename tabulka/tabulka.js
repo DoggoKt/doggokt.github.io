@@ -1,13 +1,13 @@
 const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
 const TEAM_TEMPLATE =
     `<tr>
-<td>{POS}</td>
-<td>{TEAM}</td>
+<td class="{COLOR}" style="font-weight: bold">{POS}</td>
+<td class="{COLOR}">{TEAM}</td>
 <td class="hide">{COUNT}</td>
 <td>{WON}</td>
 <td>{LOST}</td>
 <td class="hide">{DRAWN}</td>
-<td>{POINTS}</td>
+<td class="points" style="font-weight: bold">{POINTS}</td>
 </tr>`;
 
 
@@ -18,6 +18,7 @@ async function loadTeams() {
         console.log(team.points)
         return TEAM_TEMPLATE
             .replaceAll("{POS}", String(idx + 1))
+            .replaceAll("{COLOR}", (idx+1) <= 6 ? "green" : (idx+1) <= 12 ? "yellow" : "red")
             .replaceAll("{TEAM}", team.name)
             .replaceAll("{COUNT}", team.playedCount)
             .replaceAll("{WON}", team.winCount)
