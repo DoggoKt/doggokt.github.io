@@ -15,21 +15,55 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
                     <img style="flex-basis:0;" src="{LEFT_URL}" alt="{LEFT_NAME}"/>
                     <h3 style="flex-grow:1;flex-basis:0;color: #fff;text-align: center;">{LEFT_NAME}</h3>
                 </div>
+                <div class="score-wrapper">
                 {SCORE}
+                </div>
                 <div class="team-wrapper team-right">
                     <h3 style="flex-grow: 1;flex-basis:0;color: #fff;text-align: center;">{RIGHT_NAME}</h3>
                     <img style="flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
                 </div>
             </div>
+            <div class="match-event-wrapper">
+                <div class="left">
+                    {LEFT_EVENTS}
+                </div>
+                <div class="right">
+                    {RIGHT_EVENTS}
+                </div>
+            </div>
+            
          </div>`;
 
 const STYLE = `
 <style>
+
+.match-event-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.match-event-wrapper .left, .match-event-wrapper .right {
+    /*display: contents;*/
+}
+
+.match-event-wrapper .left {
+text-align: right;
+}
+.match-event-wrapper .right {
+text-align: left;
+}
+
+.match-event-wrapper p {
+margin:5px;
+    font-size:20px;
+    color: #fff;
+}
+
 .match-div {
     gap: 50px;
 }
  
-.match-div .team-wrapper {
+.match-div > div {
     display:contents;
 }
 
@@ -136,7 +170,11 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("{SCORE}", `<h1 ${unclean ? "class='settable-score'" : ""} style="color: #fff;white-space:pre;">${l.score || "- : -"}</h1>`)
                 .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
+                .replaceAll("{LEFT_EVENTS}", l.events?.left?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
+                .replaceAll("{RIGHT_EVENTS}", l.events?.right?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{ID}", l.id)
+
+            console.log(l.events)
 
             if (!foundFirst && makeDate(l.date, l.time).getTime() > Date.now()) {
                 returnValue = returnValue
@@ -146,27 +184,27 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
             }
 
             return returnValue;
-    });
+        });
 
-    const container = document.getElementById("matches-container");
+        const container = document.getElementById("matches-container");
 
-    if (elements.length === 0) {
-        container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
+        if (elements.length === 0) {
+            container.innerHTML = `<h3 style="text-align: center">Ještě nejsou naplánované žádné zápasy.</h3>`;
 
-        if (!unclean) {
-            container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
-        }
-    } else {
-        if (insertBefore) {
-            elements[elements.length - 1] = elements[elements.length - 1]
-                .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
-            container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
+            if (!unclean) {
+                container.innerHTML += `<a style="cursor: pointer; border-bottom: 2px solid black;" onclick='loadMatches(true)'>Zobrazit všechny budoucí (BEZ pořadí)</a>`
+            }
         } else {
-            container.innerHTML = elements.join("<br/><br/>");
+            if (insertBefore) {
+                elements[elements.length - 1] = elements[elements.length - 1]
+                    .replace(/padding: .*;/, "padding: 30px var(--wp--preset--spacing--50) 0;")
+                container.innerHTML = elements.join("<br/><br/>") + container.innerHTML;
+            } else {
+                container.innerHTML = elements.join("<br/><br/>");
+            }
         }
-    }
-    resolve(data.length ? data[0] : null)
-})
+        resolve(data.length ? data[0] : null)
+    })
 }
 
 function formatImageURL(teamName){
