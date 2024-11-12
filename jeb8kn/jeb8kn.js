@@ -99,7 +99,7 @@ loadMatches(true).then(() => {
             let newText;
             const draftEl = listEl.insertBefore(frag, addEl)
             onClick(draftEl, "event", (txt) => {
-                newText = txt.replaceAll("Ž!", "🟨").replaceAll("Č!", "🟥").replaceAll("G!", "⚽")
+                newText = txt.replaceAll("Z!", "🟨").replaceAll("C!", "🟥").replaceAll("G!", "⚽")
                 return {
                     left: listEl.className.includes("left"),
                     value: [...listEl.children].slice(0, -2).map(ch => ch.innerText).join("\n") + `\n${newText}`
