@@ -23,7 +23,7 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
                     <img style="flex-basis:0;" src="{RIGHT_URL}" alt="{RIGHT_NAME}"/>
                 </div>
             </div>
-            <div class="match-event-wrapper">
+            <div class="match-event-wrapper {IS_EMPTY_EVENTS}">
                 <div class="left">
                     {LEFT_EVENTS}
                 </div>
@@ -39,22 +39,27 @@ const STYLE = `
 
 .match-event-wrapper {
     display: flex;
-    justify-content: space-evenly;
+    gap: 200px;
 }
 
-.match-event-wrapper .left, .match-event-wrapper .right {
-    /*display: contents;*/
+.match-event-wrapper.empty {
+    height: 0;
+    margin: 0;
 }
 
 .match-event-wrapper .left {
-text-align: right;
+    text-align: right;
+    flex-grow: 1;
+    flex-basis: 0;
 }
 .match-event-wrapper .right {
-text-align: left;
+    text-align: left;
+    flex-grow: 1;
+    flex-basis: 0;
 }
 
 .match-event-wrapper p {
-margin:5px;
+    margin:5px;
     font-size:20px;
     color: #fff;
 }
@@ -68,9 +73,9 @@ margin:5px;
 }
 
 .match-div img {
-width:0;
-margin:10px;
-flex-grow: 1.5;
+    width:0;
+    margin:10px;
+    flex-grow: 1.5;
 }
 @media only screen and (max-width: 910px) {
     .match-div {
@@ -87,10 +92,10 @@ flex-grow: 1.5;
         font-size: 20px;
     }
     .match-div h1 {
-    font-size: 37px;
+        font-size: 37px;
     }
     .match-div img {
-    flex-grow: 1;
+        flex-grow: 1;
     }
 }
 
@@ -100,7 +105,7 @@ flex-grow: 1.5;
         font-size: 15px;
     }
     .match-div h1 {
-    font-size: 25px;
+        font-size: 25px;
     }
 }
 
@@ -112,11 +117,11 @@ flex-grow: 1.5;
     }
     
     .match-div .team-wrapper.team-left {
-            flex-direction: column;
+        flex-direction: column;
     }
     
     .match-div .team-wrapper.team-right {
-            flex-direction: column-reverse;
+        flex-direction: column-reverse;
     }
     
     .match-div .team-wrapper {
@@ -131,7 +136,6 @@ flex-grow: 1.5;
     }
 }
 </style>
-
 `
 
 let localMatchesCache = [];
@@ -172,9 +176,8 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
                 .replaceAll("{LEFT_EVENTS}", l.events?.left?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{RIGHT_EVENTS}", l.events?.right?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
+                .replaceAll("{IS_EMPTY_EVENTS}", (!l.events || (!l.events.left && !l.events.right)) ? "empty" : "")
                 .replaceAll("{ID}", l.id)
-
-            console.log(l.events)
 
             if (!foundFirst && makeDate(l.date, l.time).getTime() > Date.now()) {
                 returnValue = returnValue
