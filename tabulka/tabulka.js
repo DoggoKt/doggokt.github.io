@@ -10,6 +10,8 @@ const TEAM_TEMPLATE =
 <td class="points" style="font-weight: bold">{POINTS}</td>
 </tr>`;
 
+const GREEN_MAX = 4
+const YELLOW_MAX = 12
 
 async function loadTeams() {
     const data = await fetch(FIREBASE_BASEURL + "getTeams").then(r => r.json());
@@ -18,7 +20,7 @@ async function loadTeams() {
         console.log(team.points)
         return TEAM_TEMPLATE
             .replaceAll("{POS}", String(idx + 1))
-            .replaceAll("{COLOR}", (idx+1) <= 6 ? "green" : (idx+1) <= 12 ? "yellow" : "red")
+            .replaceAll("{COLOR}", (idx+1) <= GREEN_MAX ? "green" : (idx+1) <= YELLOW_MAX ? "yellow" : "red")
             .replaceAll("{TEAM}", team.name)
             .replaceAll("{COUNT}", team.playedCount)
             .replaceAll("{WON}", team.winCount)
