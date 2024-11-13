@@ -110,7 +110,14 @@ const STYLE = `
 }
 
 
+
 @media only screen and (max-width:570px){
+
+    .match-event-wrapper {
+        gap: 80px;
+    }
+
+
     .match-div .team-wrapper {
         display: flex;
         margin: 10px;
