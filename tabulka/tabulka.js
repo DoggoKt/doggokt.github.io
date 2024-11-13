@@ -18,7 +18,7 @@ async function loadTeams() {
     const data = await fetch(FIREBASE_BASEURL + "getTeams").then(r => r.json());
 
 
-    const elements = Object.values(data).sort((a,b) => b.points - a.points).map((team, idx)=> {
+    const elements = Object.values(data).sort((a,b) => (b.points - a.points) || (b.goalPoints - a.goalPoints)).map((team, idx)=> {
         return TEAM_TEMPLATE
             .replaceAll("{POS}", String(idx + 1))
             .replaceAll("{COLOR}", (idx+1) <= GREEN_MAX ? "green" : (idx+1) <= YELLOW_MAX ? "yellow" : "red")
