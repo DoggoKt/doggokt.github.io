@@ -7,6 +7,7 @@ const TEAM_TEMPLATE =
 <td>{WON}</td>
 <td>{LOST}</td>
 <td class="hide">{DRAWN}</td>
+<td class="hide">{GOALS}</td>
 <td class="points" style="font-weight: bold">{POINTS}</td>
 </tr>`;
 
@@ -15,6 +16,7 @@ const YELLOW_MAX = 12
 
 async function loadTeams() {
     const data = await fetch(FIREBASE_BASEURL + "getTeams").then(r => r.json());
+
 
     const elements = Object.values(data).sort((a,b) => b.points - a.points).map((team, idx)=> {
         return TEAM_TEMPLATE
@@ -25,6 +27,7 @@ async function loadTeams() {
             .replaceAll("{WON}", team.winCount)
             .replaceAll("{LOST}", team.loseCount)
             .replaceAll("{DRAWN}", team.drawCount)
+            .replaceAll("{GOALS}", team.goals)
             .replaceAll("{POINTS}", team.points);
     });
 
