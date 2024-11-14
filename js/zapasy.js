@@ -47,12 +47,7 @@ const STYLE = `
     margin: 0;
 }
 
-.match-event-wrapper .left {
-    text-align: right;
-    flex-grow: 1;
-    flex-basis: 0;
-}
-.match-event-wrapper .right {
+.match-event-wrapper .right, .match-event-wrapper .left {
     text-align: left;
     flex-grow: 1;
     flex-basis: 0;
