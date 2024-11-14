@@ -37,8 +37,12 @@ const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull
 const STYLE = `
 <style>
 
+div[data-matchid] {
+    text-align:center;
+}
+
 .match-event-wrapper {
-    display: flex;
+    display: inline-flex;
     gap: 200px;
 }
 
@@ -57,6 +61,7 @@ const STYLE = `
     margin:5px;
     font-size:20px;
     color: #fff;
+    white-space:nowrap;
 }
 
 .match-div {
@@ -109,7 +114,7 @@ const STYLE = `
 @media only screen and (max-width:570px){
 
     .match-event-wrapper {
-        gap: 80px;
+        gap: 60px;
     }
 
 
