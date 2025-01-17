@@ -23,6 +23,9 @@
             top: 0;
             background-color: #f4f2ec;
         }
+        #table-container th[data-property]{
+            cursor: pointer;
+        }
 
         #table-container table, tr, td {
             border: 1px inset black;
@@ -130,13 +133,13 @@
             <table class="table teams">
                 <thead>
                 <tr class="headingRow">
-                    <th>Pozice</th>
-                    <th>Tým</th>
-                    <th class="hide">Odehrál</th>
-                    <th>Vyhrál</th>
-                    <th>Prohrál</th>
-                    <th class="hide">Remízoval</th>
-                    <th class="hide">Góly</th>
+                    <th data-property="position">Pozice</th>
+                    <th data-property="name">Tým</th>
+                    <th data-property="playedCount" class="hide">Odehrál</th>
+                    <th data-property="winCount">Vyhrál</th>
+                    <th data-property="loseCount">Prohrál</th>
+                    <th data-property="drawCount" class="hide">Remízoval</th>
+                    <th data-property="goalsGiven" class="hide">Góly</th>
                     <th>Body</th>
                 </tr>
                 </thead>
@@ -147,10 +150,10 @@
             <table class="table shooters">
                 <thead>
                 <tr class="headingRow">
-                    <th>Pozice</th>
-                    <th>Střelec</th>
-                    <th>Góly</th>
-                    <th>Asistence</th>
+                    <th data-property="position">Pozice</th>
+                    <th data-property="name">Střelec</th>
+                    <th data-property="goals">Góly</th>
+                    <th data-property="assists">Asistence</th>
                 </tr>
                 </thead>
                 <tbody class="body">
