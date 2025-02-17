@@ -168,7 +168,7 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
         }
 
         let foundFirst = false;
-        const elements = data.map(l => {
+        const elements = [STYLE, ...data.map(l => {
             const date = l.date || "BEZ DANÉHO DATA";
             const time = l.time || "BEZ DANÉHO ČASU";
 
@@ -188,13 +188,13 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
 
             if (!foundFirst && makeDate(l.date, l.time).getTime() > Date.now()) {
                 returnValue = returnValue
-                    .replaceAll("<!--{FIRST}-->", STYLE + (unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
+                    .replaceAll("<!--{FIRST}-->", (unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
                     .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
                 foundFirst = true;
             }
 
             return returnValue;
-        });
+        })];
 
         const container = document.getElementById("matches-container");
 
