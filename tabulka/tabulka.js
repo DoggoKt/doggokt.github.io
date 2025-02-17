@@ -80,8 +80,8 @@ async function loadPlayoffTable(){
         spanEls[0].innerHTML = `<span>${PLAYOFF_SPAN.replace("{IMG_SRC}", makeImageURL(match.team_left)).replace("{TEAM_NAME}", match.team_left)}</span>`
         spanEls[1].innerHTML = `<span>${PLAYOFF_SPAN.replace("{IMG_SRC}", makeImageURL(match.team_right)).replace("{TEAM_NAME}", match.team_right)}</span>`
 
-        const scoreList = match.score.split(":").map(s => Number(s));
-        if (scoreList.every(e => !isNaN(e))) {
+        const scoreList = match.score?.split(":").map(s => Number(s));
+        if (scoreList && scoreList.every(e => !isNaN(e))) {
             spanEls[scoreList[0] > scoreList[1] ? 0 : 1].classList.add("winner")
         }
     }
