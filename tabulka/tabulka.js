@@ -1,4 +1,3 @@
-const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
 const TEAM_TEMPLATE =
     `<tr>
 <td class="{COLOR}" style="font-weight: bold">{POS}</td>
@@ -19,6 +18,7 @@ const SHOOTER_TEMPLATE = `
 <td>{ASSISTS}</td>
 </tr>`
 
+const PLAYOFF_SPAN = `<img onerror="this.parentNode.removeChild(this)" src="{IMG_SRC}" alt=""/>{TEAM_NAME}`
 
 const GREEN_MAX = 4
 const YELLOW_MAX = 12
@@ -35,11 +35,12 @@ async function loadTeams() {
     sort("teams", (a,b) => (b.points - a.points) || ((b.goalsGiven-b.goalsReceived) - (a.goalsGiven-a.goalsReceived)))
 }
 
+let matches = {};
 let shooters = {}
 async function loadShooters() {
-    const data = await fetch(FIREBASE_BASEURL + "getMatches").then(r => r.json());
+    matches = await fetch(FIREBASE_BASEURL + "getMatches").then(r => r.json());
 
-    for (const match of Object.values(data)){
+    for (const match of Object.values(matches)){
         if (!match.events) continue;
         for (const event of [...match.events.left?.split("\n")||[], ...match.events.right?.split("\n")||[]]){
             if (event.length < 1) continue;
@@ -58,6 +59,32 @@ async function loadShooters() {
     }
 
     sort("shooters", (a,b) => (b.goals - a.goals) || (b.assists - a.assists), true);
+}
+
+// playoff = "quarterleft"|"quarterright"|"semileft"|"semiright"|"finals"
+async function loadPlayoffTable(){
+    const poffMatches = Object.values(matches).filter(m => m.playoff);
+    for (const match of poffMatches){
+        const matchupEl = document.querySelector(`section.round.${match.playoff} .matchup:not(.filled)`)
+        matchupEl.classList.add("filled");
+        const spanEls = matchupEl.querySelectorAll(".participant");
+        if (spanEls.length < 2) {
+            document.querySelector(".playoff").remove();
+            throw Error("Not enough playoff teams - database error...");
+        }
+
+        spanEls.forEach(el => el.addEventListener("click", (_) => {
+            loadMatches(true, m => m.id === match.id, false, 1)
+        }));
+
+        spanEls[0].innerHTML = `<span>${PLAYOFF_SPAN.replace("{IMG_SRC}", makeImageURL(match.team_left)).replace("{TEAM_NAME}", match.team_left)}</span>`
+        spanEls[1].innerHTML = `<span>${PLAYOFF_SPAN.replace("{IMG_SRC}", makeImageURL(match.team_right)).replace("{TEAM_NAME}", match.team_right)}</span>`
+
+        const scoreList = match.score.split(":").map(s => Number(s));
+        if (scoreList.every(e => !isNaN(e))) {
+            spanEls[scoreList[0] > scoreList[1] ? 0 : 1].classList.add("winner")
+        }
+    }
 }
 
 // whichTable = "shooters"  || "teams"
@@ -120,7 +147,10 @@ function sort(whichTable, sortFunction, calculatePositions = false){
 }
 
 loadTeams().then(() => console.log("teams loaded"))
-loadShooters().then(() => console.log("shooters loaded"))
+loadShooters().then(() => {
+    console.log("shooters loaded")
+    loadPlayoffTable().then(() => console.log("playoff loaded"))
+})
 
 document.querySelectorAll(`#table-container .table th[data-property]`).forEach(el => el.addEventListener("click", _ => {
     const table = el.closest("table");
@@ -155,3 +185,24 @@ document.querySelectorAll(`#table-container .table th[data-property]`).forEach(e
         sort(tableType, (a,b) => sortDirection === "asc" ? sortByProperty(a,b) : sortByProperty(b,a))
     }
 }));
+
+
+
+//direction -1 | +1
+function scrollPlayoff(direction){
+    const sections = [...document.querySelectorAll(".playoff section")];
+    const showing = sections.filter(s => s.classList.contains("showme"));
+    let currentPage = sections.indexOf(showing[0]);
+    if ((currentPage === 0 && direction === -1) || (currentPage+direction > sections.length-1  && direction === 1)) return;
+
+    sections[currentPage].classList.remove("showme");
+    sections[currentPage + direction].classList.add("showme");
+}
+
+document.querySelectorAll(".playoff h1.scroller").forEach(el => el.addEventListener("click", e => {
+    scrollPlayoff(e.target.classList.contains("next") ? 1 : -1);
+}));
+
+function makeImageURL(teamName){
+    return `/images/${teamName.toLowerCase().normalize("NFD").replace(/[\p{Diacritic}|\s]/gu, "")}.png`;
+}

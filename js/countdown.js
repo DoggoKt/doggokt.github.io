@@ -1,9 +1,4 @@
-function makeDate(date, time){
-    const splitted = date.split(".")
-    if (splitted.length !== 3 || time.split(":").length !== 2) return 0;
-    const [hours, mins] = time.split(":")
-    return new Date(Date.parse(`${splitted[2]}-${splitted[1].padStart(2, "0")}-${splitted[0].padStart(2, "0")}T${hours.padStart(2, "0")}:${mins.padStart(2, "0")}`));
-}
+
 
 function registerCountdown(date){
     const cdEl = document.getElementById("countdown");

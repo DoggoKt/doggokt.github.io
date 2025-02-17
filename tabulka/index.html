@@ -13,6 +13,13 @@
             }
         }
 
+        .centerthis {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            height: 861px;
+        }
+
         #table-container .points {
             background-color: #58d1ff;
         }
@@ -40,7 +47,7 @@
         }
 
         #table-container .table.shooters {
-            margin-top:100px;    
+            margin-top:100px;
         }
 
         #table-container .green {
@@ -53,6 +60,131 @@
 
         #table-container .red {
             background-color: #ff5c5c;
+        }
+
+        span:hover {
+            cursor: pointer;
+            box-shadow: inset 0px -2px 0px #545151;
+            filter: brightness(75%);
+            border-bottom: none;
+            color: inherit;
+        }
+
+        .playoff h1.scroller {
+            display: none;
+            cursor:pointer;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .bracket .round {
+                margin-bottom: 80px;
+            }
+            .bracket .round:not(.showme){
+                display: none;
+            }
+
+            .bracket .round > h3 {
+                margin: 0 0 30px -70px;
+            }
+
+            .playoff h1.scroller {
+                display: block;
+            }
+        }
+        section > h3 {
+            text-align: center;
+            margin: 0 0 30px -60px;
+        }
+
+        .bracket {
+            display: flex;
+            white-space: nowrap;
+            font-size: 0;
+            font-family: "Rubik", sans-serif;
+        }
+        .bracket .round {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bracket .round .winners {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .bracket .round .winners > div.matchups {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bracket .round.ctvrtfinale .winners > div.matchups {
+            height: 94%;
+        }
+        .bracket .round.semifinale .winners > div.matchups {
+            height: 67%;
+        }
+
+        .bracket .round.finale .winners > div.matchups .matchup .participants .participant {
+            height: 100px;
+        }
+        .bracket .round.finale .winners > div.matchups .matchup .participants .participant span {
+            font-size:25px
+        }
+
+        .bracket .round .winners > div.matchups .matchup:last-child {
+            margin-bottom: 0 !important;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants {
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant {
+            box-sizing: border-box;
+            color: #858585;
+            border-left: 0.25rem solid #858585;
+            background: white;
+            width: 14rem;
+            height: 3rem;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant.winner {
+            color: #28dcff;
+            border-left: 0.25rem solid #28dcff;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant.loser {
+            color: #dc563f;
+            border-color: #dc563f;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant:not(:last-child) {
+            border-bottom: thin solid #f0f2f2;
+        }
+        .bracket .round.osmifinale .participants .participant:not(:last-child) {
+            margin-bottom: 40px;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant span {
+            margin: 0 0 0 8px;
+            text-align: center;
+            line-height: 3;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .bracket .round .winners > div.matchups .matchup .participants .participant span > img {
+            padding-right: 10px;
+            height: 90%;
+            width: 43.2px;
+            object-fit: scale-down;
+        }
+
+        .bracket .round .winners,.bracket .round .winners {
+            margin: 0 30px 0 0
+        }
+        .bracket .round .winners .matchups .matchup, .bracket .round .winners .matchups .matchup {
+            margin: 0 30px 60px 0;
         }
     </style>
 </head>
@@ -128,7 +260,115 @@
                 Tabulka<br>
             </h2>
         </div>
-
+        <div class="playoff">
+            <div style="padding: 20px">
+                <h1 style="margin:0 0 5px 0;">Play-off</h1>
+                <h4 style="margin: 0">Po kliknutí se pod tabulkou zobrazí příslušný zápas.</h4>
+            </div>
+            <br/><br/>
+            <div class="centerthis">
+                <h1 style="margin-right: 50px" class="scroller">&lt;</h1>
+                <div class="bracket">
+                    <section class="round osmifinale showme">
+                        <h3>Osmifinále</h3>
+                        <div class="winners">
+                            <div class="matchups">
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant"></div>
+                                        <div class="participant"></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant"><span>Dos</span></div>
+                                        <div class="participant"><span>Siete</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Uno</span></div>
+                                        <div class="participant"><span>Ocho</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant"><span>Dos</span></div>
+                                        <div class="participant "><span>Siete</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="round ctvrtfinale">
+                        <h3>Čtvrtfinále</h3>
+                        <div class="winners">
+                            <div class="matchups">
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant"><span>Uno</span></div>
+                                        <div class="participant"><span>Dos</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant"><span>Seis</span></div>
+                                        <div class="participant"><span>Cinco</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Uno</span></div>
+                                        <div class="participant"><span>Dos</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Seis</span></div>
+                                        <div class="participant"><span>Cinco</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                    </section>
+                    <section class="round semifinale">
+                        <h3>Semifinále</h3>
+                        <div class="winners">
+                            <div class="matchups">
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Uno</span></div>
+                                        <div class="participant"><span>Seis</span></div>
+                                    </div>
+                                </div>
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Uno</span></div>
+                                        <div class="participant"><span>Seis</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="round finale">
+                        <h3>FINÁLE</h3>
+                        <div class="winners">
+                            <div class="matchups">
+                                <div class="matchup">
+                                    <div class="participants">
+                                        <div class="participant "><span>Uno</span></div>
+                                        <div class="participant"><span>Seis</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <h1 class="scroller next" style="margin-right: 50px;">&gt;</h1>
+            </div>
+            <div id="matches-container"></div>
+            <br/><br/>
+            <br/><br/>
+        </div>
         <div id="table-container">
             <table class="table teams">
                 <thead>
@@ -161,8 +401,10 @@
                 </tbody>
             </table>
         </div>
+
     </div>
     <script type="application/javascript" src="../js/navbar.js" defer></script>
+    <script type="application/javascript" src="../js/zapasy.js"></script>
     <script type="application/javascript" src="./tabulka.js"></script>
 
 </div>

@@ -1,4 +1,5 @@
 function makeDate(date, time){
+    if (!date || !time) return null;
     const splitted = date.split(".")
     if (splitted.length !== 3 || time.split(":").length !== 2) return 0;
     const [hours, mins] = time.split(":")
@@ -8,6 +9,7 @@ function makeDate(date, time){
 const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
 const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="{STYLE}">
             <!--{FIRST}-->
+            <!--{PLAYOFF}-->
             <!--{DATE}-->
             <!--{TIME}-->
             <div class="match-div" style="display: flex; align-items: center;">
@@ -144,6 +146,12 @@ div[data-matchid] {
 }
 </style>
 `
+const PLAYOFF_GROUPNAMES = {
+    "osmifinale": "Osmifinále",
+    "ctvrtfinale": "Čtvrtfinále",
+    "semifinale": "Semifinále",
+    "finale": "Finále"
+}
 
 let localMatchesCache = [];
 async function loadMatches(unclean = false, filter = null, insertBefore = false, maxLength = null) {
@@ -180,13 +188,14 @@ async function loadMatches(unclean = false, filter = null, insertBefore = false,
                 .replaceAll("{RIGHT_NAME}", l.team_right)
                 .replaceAll("{SCORE}", `<h1 ${unclean ? "class='settable-score'" : ""} style="color: #fff;white-space:pre;">${l.score || "- : -"}</h1>`)
                 .replaceAll("<!--{DATE}-->", `<h3 ${unclean ? "class='settable-date'" : ""} style="${unclean ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
-                .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 15px; margin-bottom: 40px;">${time}</h3>`)
+                .replaceAll("<!--{TIME}-->", `<h3 ${unclean ? "class='settable-time'" : ""} style="${unclean ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 0; margin-bottom: 40px;">${time}</h3>`)
+                .replaceAll("<!--{PLAYOFF}-->", (l.playoff && unclean) ? `<h3 style="width:fit-content;color: #fff; text-align: center; font-weight: bold;margin-top:5px;margin-bottom:40px;    border-bottom: 2px solid white;">${PLAYOFF_GROUPNAMES[l.playoff]}</h3>` : "")
                 .replaceAll("{LEFT_EVENTS}", l.events?.left?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{RIGHT_EVENTS}", l.events?.right?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{IS_EMPTY_EVENTS}", (!l.events || (!l.events.left && !l.events.right)) ? "empty" : "")
                 .replaceAll("{ID}", l.id)
 
-            if (!foundFirst && makeDate(l.date, l.time).getTime() > Date.now()) {
+            if (!foundFirst && makeDate(l.date, l.time)?.getTime() > Date.now()) {
                 returnValue = returnValue
                     .replaceAll("<!--{FIRST}-->", (unclean ? "" : "<h2 style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
                     .replaceAll(/padding: .*;/g, "padding: 60px var(--wp--preset--spacing--50) 60px;");
