@@ -75,6 +75,10 @@
             cursor:pointer;
         }
 
+        .playoff h1.scroller:not(.next){
+            margin-right: 50px;
+        }
+
         @media only screen and (max-width: 1200px) {
             .bracket .round {
                 margin-bottom: 80px;
@@ -89,6 +93,15 @@
 
             .playoff h1.scroller {
                 display: block;
+            }
+        }
+
+        @media only screen and (max-width: 360px){
+            .playoff h1.scroller.next {
+                margin-left: -65px;
+            }
+            .playoff h1.scroller:not(.next){
+                margin-right:0;
             }
         }
         section > h3 {
@@ -267,7 +280,7 @@
             </div>
             <br/><br/>
             <div class="centerthis">
-                <h1 style="margin-right: 50px" class="scroller">&lt;</h1>
+                <h1 class="scroller">&lt;</h1>
                 <div class="bracket">
                     <section class="round osmifinale showme">
                         <h3>Osmifinále</h3>
@@ -363,7 +376,7 @@
                         </div>
                     </section>
                 </div>
-                <h1 class="scroller next" style="margin-right: 50px;">&gt;</h1>
+                <h1 class="scroller next">&gt;</h1>
             </div>
             <div id="matches-container"></div>
             <br/><br/>
