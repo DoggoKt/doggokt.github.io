@@ -7,7 +7,7 @@ function makeDate(date, time){
 }
 
 const FIREBASE_BASEURL = "https://europe-west4-pristine-sphere-435312-g4.cloudfunctions.net/"
-const MATCH_TEMPLATE = `<div data-matchid="{ID}" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="{STYLE}">
+const MATCH_TEMPLATE = `<div data-matchid="{ID}" style="{STYLE}" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained">
             <!--{FIRST}-->
             <!--{PLAYOFF}-->
             <!--{DATE}-->
@@ -196,7 +196,7 @@ async function loadMatches(includeDateless = false, options) {
                 .replaceAll("{SCORE}", `<h1 ${includeDateless ? "class='settable-score'" : ""} style="color: #fff;white-space:pre;">${l.score || "- : -"}</h1>`)
                 .replaceAll("<!--{DATE}-->", `<h3 ${includeDateless ? "class='settable-date'" : ""} style="${includeDateless ? "height:40px" : ""};  color: #fff; text-align: center; font-weight: normal; margin-top: 5px;">${date}</h3>`)
                 .replaceAll("<!--{TIME}-->", `<h3 ${includeDateless ? "class='settable-time'" : ""} style="${includeDateless ? "height:40px" : ""}; color: #fff; text-align: center; font-weight: normal; margin-top: 0; margin-bottom: 40px;">${time}</h3>`)
-                .replaceAll("<!--{PLAYOFF}-->", (l.playoff && includeDateless) ? `<h3 style="width:fit-content;color: #fff; text-align: center; font-weight: bold;margin-top:5px;margin-bottom:40px;    border-bottom: 2px solid white;">${PLAYOFF_GROUPNAMES[l.playoff]}</h3>` : "")
+                .replaceAll("<!--{PLAYOFF}-->", l.playoff ? `<h3 style="width:fit-content;color: #fff; text-align: center; font-weight: bold;margin-top:5px;margin-bottom:40px;    border-bottom: 2px solid white;">${PLAYOFF_GROUPNAMES[l.playoff]}</h3>` : "")
                 .replaceAll("{LEFT_EVENTS}", l.events?.left?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{RIGHT_EVENTS}", l.events?.right?.split("\n").map(e => `<p>${e}</p>`).join("\n") || "<p></p>")
                 .replaceAll("{IS_EMPTY_EVENTS}", (!l.events || (!l.events.left && !l.events.right)) ? "empty" : "")
@@ -204,7 +204,7 @@ async function loadMatches(includeDateless = false, options) {
 
             if (l.id === next.id) {
                 returnValue = returnValue
-                    .replaceAll("<!--{FIRST}-->", (includeDateless ? "" : "<h2 id=\"nextmatch\" style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>"))
+                    .replaceAll("<!--{FIRST}-->", "<h2 id=\"nextmatch\" style=\"color: #fff; text-align: center;margin-bottom: 30px;\">Příští zápas</h2>");
             }
 
             return returnValue;
@@ -226,6 +226,8 @@ async function loadMatches(includeDateless = false, options) {
             } else {
                 container.innerHTML = elements.join("<br/><br/>");
             }
+            // wait for innerHTML to redraw
+            setTimeout(() => document.querySelector("#nextmatch")?.parentNode.scrollIntoView({behavior: "smooth"}), 1);
         }
         resolve(data.length ? data[0] : null)
     })
