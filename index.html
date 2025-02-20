@@ -87,7 +87,7 @@
 
 
 
-		<div id="matches-container" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="padding: 60px var(--wp--preset--spacing--50) 60px;">
+		<div id="matches-container" class="wp-block-group alignfull has-primary-background-color has-background has-global-padding is-layout-constrained wp-container-core-group-is-layout-5 wp-block-group-is-layout-constrained" style="padding: 0 var(--wp--preset--spacing--50) 60px;">
 			<div id="countdown">
 				<h3 class="finished" style="display: none;">Zápas již probíhá!</h3>
 				<ul class="unfinished">
@@ -103,7 +103,7 @@
 </div>
 <script type="application/javascript" src="./js/zapasy.js"></script>
 <script type="application/javascript" defer>
-	loadMatches(false, (m) => makeDate(m.date, m.time).getTime() > Date.now(), true, 1)
+	loadMatches(true, {prepend: true, returnNext: true})
 			.then((match) => registerCountdown(makeDate(match.date, match.time)))
 </script>
 <script type="application/javascript" src="./js/countdown.js"></script>
