@@ -63,9 +63,9 @@ async function loadShooters() {
 
 // playoff = "quarterleft"|"quarterright"|"semileft"|"semiright"|"finals"
 async function loadPlayoffTable(){
-    const poffMatches = Object.values(matches).filter(m => m.playoff);
+    const poffMatches = Object.values(matches).filter(m => m.playoff && m.playoffIdx);
     for (const match of poffMatches){
-        const matchupEl = document.querySelector(`section.round.${match.playoff} .matchup:not(.filled)`)
+        const matchupEl = document.querySelector(`section.round.${match.playoff} .matchup:nth-child(${match.playoffIdx})`)
         matchupEl.classList.add("filled");
         const spanEls = matchupEl.querySelectorAll(".participant");
         if (spanEls.length < 2) {
