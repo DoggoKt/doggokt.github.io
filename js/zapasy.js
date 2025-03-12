@@ -82,6 +82,7 @@ div[data-matchid] {
     width:0;
     margin:10px;
     flex-grow: 1.5;
+    pointer-events: none;
 }
 @media only screen and (max-width: 910px) {
     .match-div {
