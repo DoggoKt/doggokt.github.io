@@ -74,7 +74,7 @@ async function loadPlayoffTable(){
         }
 
         spanEls.forEach(el => el.addEventListener("click", (_) => {
-            loadMatches(true, {filter: m => m.id === match.id, maxLength: 1})
+            loadMatches(true, {filter: m => m.playoff === match.playoff && m.playoffIdx === match.playoffIdx, maxLength: 2})
         }));
 
         spanEls[0].innerHTML = `<span>${PLAYOFF_SPAN.replace("{IMG_SRC}", makeImageURL(match.team_left)).replace("{TEAM_NAME}", match.team_left)}</span>`

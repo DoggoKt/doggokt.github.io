@@ -228,7 +228,7 @@ async function loadMatches(includeDateless = false, options) {
                 container.innerHTML = elements.join("<br/><br/>");
             }
             // wait for innerHTML to redraw
-            setTimeout(() => document.querySelector("#nextmatch")?.parentNode.scrollIntoView({behavior: "smooth"}), 1);
+            setTimeout(() => document.querySelector("#nextmatch")?.parentNode.scrollIntoView({behavior: "smooth"}), 100);
         }
         resolve(data.length ? data[0] : null)
     })

@@ -62,13 +62,6 @@
             background-color: #ff5c5c;
         }
 
-        span:hover {
-            cursor: pointer;
-            box-shadow: inset 0px -2px 0px #545151;
-            filter: brightness(75%);
-            border-bottom: none;
-            color: inherit;
-        }
 
         .playoff h1.scroller {
             display: none;
@@ -187,6 +180,13 @@
             align-items: center;
             height: 100%;
         }
+        .bracket .round .winners > div.matchups .matchup .participants .participant span:hover {
+            cursor: pointer;
+            box-shadow: inset 0px -2px 0px #545151;
+            filter: brightness(75%);
+            border-bottom: none;
+            color: inherit;
+        }
         .bracket .round .winners > div.matchups .matchup .participants .participant span > img {
             padding-right: 10px;
             height: 90%;
@@ -284,7 +284,9 @@
                 <h1 class="scroller">&lt;</h1>
                 <div class="bracket">
                     <section class="round osmifinale showme">
-                        <h3>Osmifinále</h3>
+                        <h3>Osmifinále
+                            <br><span style="font-size: 16px">&nbsp;</span>
+                        </h3>
                         <div class="winners">
                             <div class="matchups">
                                 <div class="matchup">
@@ -315,7 +317,9 @@
                         </div>
                     </section>
                     <section class="round ctvrtfinale">
-                        <h3>Čtvrtfinále</h3>
+                        <h3>Čtvrtfinále
+                            <br><span style="font-size: 16px"><i>Hraje se na dva zápasy</i></span>
+                        </h3>
                         <div class="winners">
                             <div class="matchups">
                                 <div class="matchup">
@@ -345,7 +349,9 @@
                             </div>
                     </section>
                     <section class="round semifinale">
-                        <h3>Semifinále</h3>
+                        <h3>Semifinále
+                            <br><span style="font-size: 16px"><i>Hraje se na dva zápasy</i></span>
+                        </h3>
                         <div class="winners">
                             <div class="matchups">
                                 <div class="matchup">
